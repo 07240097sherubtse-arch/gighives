@@ -9,7 +9,10 @@ async function createAdmin() {
         // Admin account details
         const name = "GigHives Admin";
         const email = "admin@gighives.com";
-        const password = "admin##[ADMIN]2026#";
+        const password = process.env.ADMIN_PASSWORD;
+        if (!password) {
+    throw new Error("ADMIN_PASSWORD is missing from .env");
+}
 
         // Check if the admin email already exists
         const existingUser = await db.oneOrNone(

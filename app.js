@@ -5,8 +5,9 @@ const db = require("./config/database");
 const express = require("express");
 const path = require("path");
 const session = require("express-session");
-
+const pgSession = require("connect-pg-simple")(session);
 const app = express();
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3000;
 
 // Routes
@@ -33,14 +34,21 @@ app.use(express.json());
 
 // Session middleware
 app.use(session({
+    store: new pgSession({
+        conString: process.env.DATABASE_URL,
+        tableName: "user_sessions",
+        createTableIfMissing: true
+    }),
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 1000 * 60 * 60 * 24
+        maxAge: 1000 * 60 * 60 * 24,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax"
     }
 }));
-
 // Make the logged-in user available in all EJS pages
 app.use((req, res, next) => {
     res.locals.user = req.session.user || null;
