@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications | GigHives</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+    <h1>Applications for My Jobs</h1>
+
+    <p>Review students who have applied for your job postings.</p>
+
+    <% if (applications.length === 0) { %>
+
+        <p>No applications received yet.</p>
+
+    <% } else { %>
+
+        <% applications.forEach(application => { %>
+
+            <div class="job-card">
+
+                <h2><%= application.job_title %></h2>
+
+                <h3>Applicant: <%= application.student_name %></h3>
+
+                <p>
+                    <strong>Email:</strong>
+                    <%= application.student_email %>
+                </p>
+
+                <p><strong>Cover Letter:</strong></p>
+
+                <p><%= application.cover_letter || "No cover letter provided." %></p>
+
+                <p>
+                    <strong>Application Status:</strong>
+                    <%= application.status %>
+                </p>
+
+                <p>
+                    <strong>Applied On:</strong>
+                    <%= application.applied_at %>
+                </p>
+
+                <% if (application.status === "pending") { %>
+
+                    <div class="application-actions">
+
+                        <form action="/applications/<%= application.application_id %>/status" method="POST">
+
+                            <input type="hidden" name="status" value="accepted">
+
+                            <button type="submit">
+                                Accept
+                            </button>
+
+                        </form>
+
+                        <form action="/applications/<%= application.application_id %>/status" method="POST">
+
+                            <input type="hidden" name="status" value="rejected">
+
+                            <button type="submit">
+                                Reject
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                <% } else { %>
+
+                    <p>This application has already been reviewed.</p>
+
+                <% } %>
+
+            </div>
+
+        <% }) %>
+
+    <% } %>
+
+    <a href="/jobs">Back to Jobs</a>
+
+</body>
+</html>

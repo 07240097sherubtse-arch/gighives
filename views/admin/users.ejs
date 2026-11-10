@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users | GigHives</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="admin-page">
+
+<div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+
+        <h2 class="admin-logo">GigHives</h2>
+        <p class="admin-label">ADMIN PANEL</p>
+
+        <nav class="admin-navigation">
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/users" class="active">Manage Users</a>
+            <a href="/admin/jobs">Manage Jobs</a>
+            <a href="/admin/applications">Applications</a>
+            <a href="/">Visit Homepage</a>
+        </nav>
+
+        <form action="/logout" method="POST" class="admin-logout-form">
+            <button type="submit" class="admin-logout">Logout</button>
+        </form>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+
+        <header class="admin-header">
+            <div>
+                <h1>User Management</h1>
+                <p>Welcome back, <strong><%= user.name %></strong>!</p>
+            </div>
+
+            <div class="admin-badge">Administrator</div>
+        </header>
+
+        <!-- User Summary -->
+        <section class="admin-section">
+
+            <h2>Registered Users</h2>
+
+            <div class="admin-stats-grid">
+
+                <div class="admin-stat-card blue">
+                    <h3>Total Users</h3>
+                    <p><%= users.length %></p>
+                    <span>Registered accounts</span>
+                </div>
+
+                <div class="admin-stat-card purple">
+                    <h3>Students</h3>
+                    <p><%= users.filter(u => u.role === "student").length %></p>
+                    <span>Student accounts</span>
+                </div>
+
+                <div class="admin-stat-card green">
+                    <h3>Clients</h3>
+                    <p><%= users.filter(u => u.role === "client").length %></p>
+                    <span>Client accounts</span>
+                </div>
+
+                <div class="admin-stat-card orange">
+                    <h3>Administrators</h3>
+                    <p><%= users.filter(u => u.role === "admin").length %></p>
+                    <span>Admin accounts</span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- User Table -->
+        <section class="admin-section">
+
+            <h2>All Registered Accounts</h2>
+
+            <% if (users.length === 0) { %>
+
+                <div class="admin-empty">
+                    <p>No registered users found.</p>
+                </div>
+
+            <% } else { %>
+
+                <div class="admin-table-container">
+
+                    <table class="admin-table">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Account Status</th>
+                                <th>Registration Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <% users.forEach(function(u) { %>
+
+                                <tr>
+                                    <td><%= u.id %></td>
+
+                                    <td>
+                                        <strong><%= u.full_name %></strong>
+                                    </td>
+
+                                    <td><%= u.email %></td>
+
+                                    <td>
+                                        <span class="role-badge <%= u.role %>">
+                                            <%= u.role %>
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge <%= u.account_status %>">
+                                            <%= u.account_status %>
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <%= new Date(u.created_at).toLocaleDateString() %>
+                                    </td>
+
+                                    <td>
+
+                                        <% if (u.role !== "admin") { %>
+
+                                            <% if (u.account_status === "active") { %>
+
+                                                <form
+                                                    action="/admin/users/<%= u.id %>/suspend"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Are you sure you want to suspend this user?');"
+                                                >
+                                                    <button type="submit" class="suspend-btn">
+                                                        Suspend
+                                                    </button>
+                                                </form>
+
+                                            <% } else { %>
+
+                                                <form
+                                                    action="/admin/users/<%= u.id %>/reactivate"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Are you sure you want to reactivate this user?');"
+                                                >
+                                                    <button type="submit" class="reactivate-btn">
+                                                        Reactivate
+                                                    </button>
+                                                </form>
+
+                                            <% } %>
+
+                                        <% } else { %>
+
+                                            <span class="protected-label">Protected</span>
+
+                                        <% } %>
+
+                                    </td>
+                                </tr>
+
+                            <% }); %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            <% } %>
+
+        </section>
+
+        <footer class="admin-footer">
+            <p>© 2026 GigHives. Administration Panel.</p>
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Hiring Requests | GigHives</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="my-hire-requests-page">
+
+    <nav class="requests-navbar">
+        <a href="/" class="requests-logo">Gig<span>Hives</span></a>
+
+        <div class="requests-nav-links">
+            <a href="/">Home</a>
+            <a href="/jobs">Find Jobs</a>
+            <a href="/hire">Hire Skill</a>
+            <a href="/student/dashboard">Dashboard</a>
+        </div>
+
+        <div class="requests-user">
+            <span><%= user.full_name %></span>
+        </div>
+    </nav>
+
+    <main class="requests-main">
+
+        <section class="requests-heading">
+            <div>
+                <p class="requests-eyebrow">STUDENT WORKSPACE</p>
+                <h1>My Hiring Requests</h1>
+                <p>Manage project opportunities from clients and grow your freelance career.</p>
+            </div>
+        </section>
+
+        <%
+            const total = requests.length;
+            const pending = requests.filter(r => r.status === "pending").length;
+            const accepted = requests.filter(r => r.status === "accepted").length;
+            const rejected = requests.filter(r => r.status === "rejected").length;
+        %>
+
+        <section class="request-stats">
+
+            <div class="request-stat-card">
+                <div class="stat-icon total-icon">▤</div>
+                <div>
+                    <p>Total Requests</p>
+                    <h2><%= total %></h2>
+                </div>
+            </div>
+
+            <div class="request-stat-card">
+                <div class="stat-icon pending-icon">◷</div>
+                <div>
+                    <p>Pending</p>
+                    <h2><%= pending %></h2>
+                </div>
+            </div>
+
+            <div class="request-stat-card">
+                <div class="stat-icon accepted-icon">✓</div>
+                <div>
+                    <p>Accepted</p>
+                    <h2><%= accepted %></h2>
+                </div>
+            </div>
+
+            <div class="request-stat-card">
+                <div class="stat-icon rejected-icon">×</div>
+                <div>
+                    <p>Rejected</p>
+                    <h2><%= rejected %></h2>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="requests-content">
+
+            <div class="requests-section-heading">
+                <div>
+                    <h2>Received Requests</h2>
+                    <p>Review the projects clients have offered you.</p>
+                </div>
+                <span><%= total %> request(s)</span>
+            </div>
+
+            <% if (requests.length === 0) { %>
+
+                <div class="requests-empty">
+                    <div class="empty-icon">✉</div>
+                    <h2>No hiring requests yet</h2>
+                    <p>
+                        When a client sends you a project offer,
+                        it will appear here.
+                    </p>
+                    <a href="/student/profile">View My Freelancer Profile</a>
+                </div>
+
+            <% } else { %>
+
+                <div class="requests-card-list">
+
+                    <% requests.forEach(request => { %>
+
+                        <article class="professional-request-card">
+
+                            <div class="request-card-header">
+
+                                <div class="request-project-info">
+                                    <div class="project-icon">GH</div>
+
+                                    <div>
+                                        <h3><%= request.project_title %></h3>
+                                        <p>
+                                            Offered by
+                                            <strong><%= request.client_name %></strong>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <span class="professional-status <%= request.status %>">
+                                    <%= request.status %>
+                                </span>
+
+                            </div>
+
+                            <div class="request-description">
+                                <h4>Project Description</h4>
+                                <p><%= request.description %></p>
+                            </div>
+
+                            <div class="request-information">
+
+                                <div>
+                                    <span>PROJECT BUDGET</span>
+                                    <strong>Nu. <%= Number(request.budget).toLocaleString("en-IN") %></strong>
+                                </div>
+
+                                <div>
+                                    <span>DEADLINE</span>
+                                    <strong>
+                                        <%= request.deadline
+                                            ? new Date(request.deadline).toLocaleDateString()
+                                            : "Not specified" %>
+                                    </strong>
+                                </div>
+
+                                <div>
+                                    <span>RECEIVED ON</span>
+                                    <strong>
+                                        <%= new Date(request.created_at).toLocaleDateString() %>
+                                    </strong>
+                                </div>
+
+                            </div>
+
+                            <% if (request.status === "pending") { %>
+
+                                <div class="professional-request-actions">
+
+                                    <form action="/hire/my-requests/<%= request.id %>" method="POST">
+                                        <input type="hidden" name="status" value="accepted">
+                                        <button type="submit" class="professional-accept-btn">
+                                            ✓ Accept Project
+                                        </button>
+                                    </form>
+
+                                    <form action="/hire/my-requests/<%= request.id %>" method="POST">
+                                        <input type="hidden" name="status" value="rejected">
+                                        <button type="submit" class="professional-reject-btn">
+                                            Reject
+                                        </button>
+                                    </form>
+
+                                </div>
+
+                            <% } else if (request.status === "accepted") { %>
+
+    <!-- Work Progress Section -->
+    <div class="work-progress-section">
+
+        <h4>Work Progress</h4>
+
+        <p>
+            Current Status:
+            <strong><%= request.work_status || "Not Started" %></strong>
+        </p>
+
+        <form
+            action="/hire/request/<%= request.id %>/progress"
+            method="POST"
+        >
+
+            <label for="work_status_<%= request.id %>">
+                Update Project Progress:
+            </label>
+
+            <select
+                name="work_status"
+                id="work_status_<%= request.id %>"
+                required
+            >
+                <option value="" selected disabled>
+                    Select progress
+                </option>
+
+                <option value="In Progress">In Progress</option>
+                <option value="Submitted">Submitted</option>
+                <option value="Completed">Completed</option>
+
+            </select>
+
+            <button type="submit">
+                Update Progress
+            </button>
+
+        </form>
+
+    </div>
+
+<% } else { %>
+
+    <div class="request-response-note">
+        You have rejected this request.
+    </div>
+
+<% } %>
+
+                        </article>
+
+                    <% }); %>
+
+                </div>
+
+            <% } %>
+
+        </section>
+
+    </main>
+
+    <footer class="requests-footer">
+        <p>© 2026 GigHives. Connecting students with opportunities.</p>
+    </footer>
+
+</body>
+</html>

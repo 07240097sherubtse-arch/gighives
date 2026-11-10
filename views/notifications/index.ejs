@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | GigHives</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="notifications-page">
+
+    <main class="notifications-container">
+
+        <!-- Page Header -->
+        <section class="notifications-header">
+
+            <div class="notifications-heading">
+                <div class="notifications-heading-icon">🔔</div>
+
+                <div>
+                    <h1>Notifications</h1>
+                    <p>Stay updated with the latest activities on GigHives.</p>
+                </div>
+            </div>
+
+            <div class="notifications-header-actions">
+
+                <span class="unread-count">
+                    You have <strong><%= unreadCount %></strong>
+                    unread notifications
+                </span>
+
+                <% if (unreadCount > 0) { %>
+                    <form action="/notifications/read-all" method="POST">
+                        <button type="submit" class="mark-all-btn">
+                            ✓ Mark All as Read
+                        </button>
+                    </form>
+                <% } %>
+
+            </div>
+
+        </section>
+
+        <!-- Notifications List -->
+        <% if (notifications.length > 0) { %>
+
+            <div class="notifications-list">
+
+                <% notifications.forEach(notification => { %>
+
+                    <article class="notification-card <%= notification.is_read ? 'read' : 'unread' %>">
+
+                        <!-- Notification Icon -->
+                        <div class="notification-card-icon">
+
+                            <% if (notification.type === "job") { %>
+                                💼
+                            <% } else if (notification.type === "job_application") { %>
+                                📩
+                            <% } else if (notification.type === "application_status") { %>
+                                ✅
+                            <% } else { %>
+                                🔔
+                            <% } %>
+
+                        </div>
+
+                        <!-- Notification Content -->
+                        <div class="notification-content">
+
+                            <div class="notification-title-row">
+
+                                <% if (!notification.is_read) { %>
+                                    <span class="unread-dot"></span>
+                                <% } %>
+
+                                <h3><%= notification.message %></h3>
+
+                            </div>
+
+                            <p class="notification-time">
+                                🕒 <%= new Date(notification.created_at).toLocaleString() %>
+                            </p>
+
+                        </div>
+
+                        <!-- Notification Actions -->
+                        <div class="notification-actions">
+
+                            <% if (notification.related_url) { %>
+                                <a href="<%= notification.related_url %>"
+                                   class="view-details-btn">
+                                    View Details →
+                                </a>
+                            <% } %>
+
+                            <% if (!notification.is_read) { %>
+                                <form
+                                    action="/notifications/<%= notification.id %>/read"
+                                    method="POST">
+
+                                    <button type="submit" class="mark-read-btn">
+                                        Mark as Read
+                                    </button>
+
+                                </form>
+                            <% } %>
+
+                        </div>
+
+                    </article>
+
+                <% }); %>
+
+            </div>
+
+        <% } else { %>
+
+            <!-- Empty State -->
+            <section class="no-notifications">
+
+                <div class="empty-notification-icon">🔔</div>
+
+                <h2>You're all caught up!</h2>
+
+                <p>
+                    No new notifications at the moment.
+                    Check back later for updates.
+                </p>
+
+                <a href="/jobs" class="explore-jobs-btn">
+                    Explore Jobs
+                </a>
+
+            </section>
+
+        <% } %>
+
+        <a href="/" class="back-link">← Back to Home</a>
+
+    </main>
+
+</body>
+</html>

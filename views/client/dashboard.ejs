@@ -1,0 +1,359 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Dashboard | GigHives</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="client-dashboard-page">
+
+    <!-- Navigation Bar -->
+    <nav class="client-navbar">
+        <a href="/" class="client-logo">Gig<span>Hives</span></a>
+
+        <div class="client-nav-links">
+            <a href="/">Home</a>
+            <a href="/jobs">Find Jobs</a>
+            <a href="/hire">Hire Skill</a>
+            <a href="/client/dashboard" class="active">Dashboard</a>
+        </div>
+
+        <div class="client-nav-user">
+    <span><%= user.full_name %></span>
+
+    <a href="/notifications" class="notification-link">
+        <span class="notification-icon">🔔</span>
+
+        <% if (unreadNotificationCount > 0) { %>
+            <span class="notification-badge">
+                <%= unreadNotificationCount %>
+            </span>
+        <% } %>
+    </a>
+</div>
+    </nav>
+
+    <main class="client-dashboard-main">
+
+        <!-- Welcome Section -->
+        <section class="client-welcome">
+            <div>
+                <p class="client-eyebrow">CLIENT WORKSPACE</p>
+                <h1>Welcome back, <%= user.full_name %>!</h1>
+                <p>Manage your hiring requests, track projects and work with talented students.</p>
+            </div>
+        </section>
+
+        <!-- Dashboard Statistics -->
+        <%
+            const total = requests.length;
+            const pending = requests.filter(r => r.status === "pending").length;
+            const accepted = requests.filter(r => r.status === "accepted").length;
+            const rejected = requests.filter(r => r.status === "rejected").length;
+
+            const activeProjects = requests.filter(
+                r => r.status === "accepted" &&
+                     (r.work_status || "Not Started") !== "Completed"
+            );
+
+            const completedProjects = requests.filter(
+                r => r.status === "accepted" &&
+                     r.work_status === "Completed"
+            );
+        %>
+
+        <section class="client-stats">
+
+            <div class="client-stat-card">
+                <span class="client-stat-icon">▤</span>
+                <div>
+                    <p>Total Requests</p>
+                    <h2><%= total %></h2>
+                </div>
+            </div>
+
+            <div class="client-stat-card">
+                <span class="client-stat-icon pending-color">◷</span>
+                <div>
+                    <p>Pending Requests</p>
+                    <h2><%= pending %></h2>
+                </div>
+            </div>
+
+            <div class="client-stat-card">
+                <span class="client-stat-icon accepted-color">✓</span>
+                <div>
+                    <p>Active Projects</p>
+                    <h2><%= activeProjects.length %></h2>
+                </div>
+            </div>
+
+            <div class="client-stat-card">
+                <span class="client-stat-icon completed-color">★</span>
+                <div>
+                    <p>Completed Projects</p>
+                    <h2><%= completedProjects.length %></h2>
+                </div>
+            </div>
+
+        </section>
+        
+<!-- Applications Received -->
+<section class="client-section">
+
+    <div class="client-section-heading">
+        <div>
+            <h2>Applications Received</h2>
+            <p>Review students who have applied for your posted jobs.</p>
+        </div>
+
+        <span><%= applications.length %> application(s)</span>
+    </div>
+
+    <% if (applications.length > 0) { %>
+
+        <div class="client-request-list">
+
+            <% applications.forEach(application => { %>
+
+                <article class="client-request-card">
+
+                    <div class="client-request-header">
+                        <div>
+                            <h3><%= application.job_title %></h3>
+                            <p>
+                                Applicant:
+                                <strong><%= application.student_name %></strong>
+                            </p>
+                        </div>
+
+                        <span class="client-status <%= application.status %>">
+                            <%= application.status %>
+                        </span>
+                    </div>
+
+                    <div class="client-request-details">
+                        <p>
+                            <span>Student Email</span>
+                            <strong><%= application.student_email %></strong>
+                        </p>
+
+                        <p>
+                            <span>Applied On</span>
+                            <strong>
+                                <%= new Date(application.applied_at).toLocaleDateString() %>
+                            </strong>
+                        </p>
+                    </div>
+
+                    <div class="application-cover-letter">
+                        <strong>Cover Letter</strong>
+                        <p><%= application.cover_letter %></p>
+                    </div>
+
+                    <% if (application.status === "pending") { %>
+
+                        <div class="application-action-buttons">
+
+                            <form
+                                action="/applications/<%= application.application_id %>/status"
+                                method="POST"
+                            >
+                                <input type="hidden" name="status" value="accepted">
+
+                                <button type="submit" class="application-accept-btn">
+                                    Accept Applicant
+                                </button>
+                            </form>
+
+                            <form
+                                action="/applications/<%= application.application_id %>/status"
+                                method="POST"
+                            >
+                                <input type="hidden" name="status" value="rejected">
+
+                                <button type="submit" class="application-reject-btn">
+                                    Reject Applicant
+                                </button>
+                            </form>
+
+                        </div>
+
+                    <% } %>
+
+                </article>
+
+            <% }); %>
+
+        </div>
+
+    <% } else { %>
+
+        <div class="client-empty-state">
+            <h3>No applications received yet</h3>
+            <p>Applications from students will appear here when they apply for your posted jobs.</p>
+        </div>
+
+    <% } %>
+
+</section>
+
+
+        <!-- Active Projects -->
+        <section class="client-section">
+
+            <div class="client-section-heading">
+                <div>
+                    <h2>My Active Projects</h2>
+                    <p>Track the progress of projects accepted by students.</p>
+                </div>
+                <span><%= activeProjects.length %> project(s)</span>
+            </div>
+
+            <% if (activeProjects.length > 0) { %>
+
+                <div class="client-project-grid">
+
+                    <% activeProjects.forEach(project => { %>
+
+                        <article class="client-project-card">
+
+                            <div class="client-project-top">
+                                <h3><%= project.project_title %></h3>
+                                <span class="client-status accepted">
+                                    Accepted
+                                </span>
+                            </div>
+
+                            <p class="client-project-student">
+                                Student: <strong><%= project.student_name %></strong>
+                            </p>
+
+                            <div class="client-project-progress">
+                                <span>Work Progress</span>
+                                <strong><%= project.work_status || "Not Started" %></strong>
+                            </div>
+
+                            <div class="client-project-details">
+                                <p>
+                                    <span>Budget</span>
+                                    <strong>Nu. <%= Number(project.budget).toLocaleString("en-IN") %></strong>
+                                </p>
+
+                                <p>
+                                    <span>Deadline</span>
+                                    <strong>
+                                        <%= project.deadline
+                                            ? new Date(project.deadline).toLocaleDateString()
+                                            : "Not specified" %>
+                                    </strong>
+                                </p>
+                            </div>
+
+                        </article>
+
+                    <% }); %>
+
+                </div>
+
+            <% } else { %>
+
+                <div class="client-empty-state">
+                    <h3>No active projects yet</h3>
+                    <p>Projects will appear here when students accept your hiring requests.</p>
+                </div>
+
+            <% } %>
+
+        </section>
+
+        <!-- All Hiring Requests -->
+        <section class="client-section">
+
+            <div class="client-section-heading">
+                <div>
+                    <h2>My Hiring Requests</h2>
+                    <p>View and track all the hiring requests you have sent.</p>
+                </div>
+                <span><%= total %> request(s)</span>
+            </div>
+
+            <% if (requests.length > 0) { %>
+
+                <div class="client-request-list">
+
+                    <% requests.forEach(request => { %>
+
+                        <article class="client-request-card">
+
+                            <div class="client-request-header">
+                                <div>
+                                    <h3><%= request.project_title %></h3>
+                                    <p>Student: <strong><%= request.student_name %></strong></p>
+                                </div>
+
+                                <span class="client-status <%= request.status %>">
+                                    <%= request.status %>
+                                </span>
+                            </div>
+
+                            <p class="client-request-description">
+                                <%= request.description %>
+                            </p>
+
+                            <div class="client-request-details">
+
+                                <p>
+                                    <span>Budget</span>
+                                    <strong>Nu. <%= Number(request.budget).toLocaleString("en-IN") %></strong>
+                                </p>
+
+                                <p>
+                                    <span>Deadline</span>
+                                    <strong>
+                                        <%= request.deadline
+                                            ? new Date(request.deadline).toLocaleDateString()
+                                            : "Not specified" %>
+                                    </strong>
+                                </p>
+
+                                <% if (request.status === "accepted") { %>
+                                    <p>
+                                        <span>Work Progress</span>
+                                        <strong><%= request.work_status || "Not Started" %></strong>
+                                    </p>
+                                <% } %>
+
+                            </div>
+
+                        </article>
+
+                    <% }); %>
+
+                </div>
+
+            <% } else { %>
+
+                <div class="client-empty-state">
+                    <h3>No hiring requests yet</h3>
+                    <p>When you hire a student, your requests will appear here.</p>
+                    <a href="/hire">Find a Student</a>
+                </div>
+
+            <% } %>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="client-footer">
+        <p>© 2026 GigHives. Connecting students with opportunities.</p>
+    </footer>
+
+</body>
+</html>
+```

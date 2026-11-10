@@ -1,0 +1,98 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post a Job | GigHives</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="post-job-page">
+
+    <nav class="post-job-nav">
+        <a href="/" class="post-job-logo">GigHives</a>
+        <div>
+            <a href="/">Home</a>
+            <a href="/jobs">Find Jobs</a>
+            <a href="/jobs/post">Post a Job</a>
+        </div>
+    </nav>
+
+    <main class="post-job-container">
+
+        <div class="post-job-heading">
+            <span class="post-job-tag">HIRE TALENT</span>
+            <h1>Post a Job</h1>
+            <p>Find talented students and bring your project to life.</p>
+        </div>
+
+        <form action="/jobs/post" method="POST" class="post-job-form">
+
+            <div class="form-group">
+                <label for="title">Job Title</label>
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    placeholder="e.g. Logo Designer Needed"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="description">Job Description</label>
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="5"
+                    placeholder="Describe the work, requirements and expectations..."
+                    required
+                ></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="budget">Budget (Nu.)</label>
+                    <input
+                        type="number"
+                        id="budget"
+                        name="budget"
+                        min="1"
+                        step="0.01"
+                        placeholder="e.g. 500"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select a category</option>
+                        <option value="Graphic Design">Graphic Design</option>
+                        <option value="Web Development">Web Development</option>
+                        <option value="Content Writing">Content Writing</option>
+                        <option value="Photography">Photography</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="deadline">Deadline</label>
+                <input type="date" id="deadline" name="deadline">
+                <small>Choose the expected completion date.</small>
+            </div>
+
+            <button type="submit" class="post-job-button">
+                Post Job →
+            </button>
+
+            <p class="form-note">Make sure your job details are accurate before submitting.</p>
+
+        </form>
+
+    </main>
+
+</body>
+</html>

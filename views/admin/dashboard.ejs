@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | GigHives</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="admin-page">
+
+    <div class="admin-layout">
+
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+
+            <h2 class="admin-logo">GigHives</h2>
+            <p class="admin-label">ADMIN PANEL</p>
+
+            <nav class="admin-navigation">
+                <a href="/admin/dashboard" class="active">Dashboard</a>
+                <a href="/admin/users">Manage Users</a>
+                <a href="/admin/jobs">Manage Jobs</a>
+                <a href="/admin/applications">Applications</a>
+                <a href="/">Visit Homepage</a>
+            </nav>
+
+            <form action="/logout" method="POST" class="admin-logout-form">
+                <button type="submit" class="admin-logout">Logout</button>
+            </form>
+
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+
+            <header class="admin-header">
+                <div>
+                    <h1>Dashboard Overview</h1>
+                    <p>Welcome back, <strong><%= user.name %></strong>!</p>
+                </div>
+
+                <div class="admin-badge">Administrator</div>
+            </header>
+
+            <!-- User Statistics -->
+            <section class="admin-section">
+                <h2>User Statistics</h2>
+
+                <div class="admin-stats-grid">
+
+                    <div class="admin-stat-card blue">
+                        <h3>Total Users</h3>
+                        <p><%= userStatistics.total_users %></p>
+                        <span>Registered accounts</span>
+                    </div>
+
+                    <div class="admin-stat-card purple">
+                        <h3>Students</h3>
+                        <p><%= userStatistics.total_students %></p>
+                        <span>Student accounts</span>
+                    </div>
+
+                    <div class="admin-stat-card green">
+                        <h3>Clients</h3>
+                        <p><%= userStatistics.total_clients %></p>
+                        <span>Client accounts</span>
+                    </div>
+
+                    <div class="admin-stat-card orange">
+                        <h3>Administrators</h3>
+                        <p><%= userStatistics.total_admins %></p>
+                        <span>Admin accounts</span>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Application Statistics -->
+            <section class="admin-section">
+                <h2>Application Statistics</h2>
+
+                <div class="admin-stats-grid">
+
+                    <div class="admin-stat-card blue">
+                        <h3>Total Applications</h3>
+                        <p><%= statistics.total_applications %></p>
+                        <span>All applications</span>
+                    </div>
+
+                    <div class="admin-stat-card orange">
+                        <h3>Pending</h3>
+                        <p><%= statistics.pending_applications %></p>
+                        <span>Awaiting decisions</span>
+                    </div>
+
+                    <div class="admin-stat-card green">
+                        <h3>Accepted</h3>
+                        <p><%= statistics.accepted_applications %></p>
+                        <span>Successful applications</span>
+                    </div>
+
+                    <div class="admin-stat-card red">
+                        <h3>Rejected</h3>
+                        <p><%= statistics.rejected_applications %></p>
+                        <span>Unsuccessful applications</span>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Job Statistics -->
+            <section class="admin-section">
+                <h2>Job Statistics</h2>
+
+                <div class="admin-stats-grid">
+
+                    <div class="admin-stat-card blue">
+                        <h3>Total Jobs</h3>
+                        <p><%= jobStatistics.total_jobs %></p>
+                        <span>All posted jobs</span>
+                    </div>
+
+                    <div class="admin-stat-card green">
+                        <h3>Open Jobs</h3>
+                        <p><%= jobStatistics.open_jobs %></p>
+                        <span>Currently available</span>
+                    </div>
+
+                    <div class="admin-stat-card red">
+                        <h3>Closed Jobs</h3>
+                        <p><%= jobStatistics.closed_jobs %></p>
+                        <span>No longer available</span>
+                    </div>
+
+                    <div class="admin-stat-card purple">
+                        <h3>Jobs Posted Today</h3>
+                        <p><%= jobStatistics.jobs_today %></p>
+                        <span>Today's activity</span>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="admin-section">
+                <h2>Quick Actions</h2>
+
+                <div class="admin-actions">
+
+                    <a href="/admin/users">
+                        <span>Manage Users</span>
+                        <small>View, suspend or reactivate accounts</small>
+                    </a>
+
+                    <a href="/admin/jobs">
+                        <span>Manage Jobs</span>
+                        <small>Review and manage posted jobs</small>
+                    </a>
+
+                    <a href="/admin/applications">
+                        <span>View Applications</span>
+                        <small>Monitor student applications</small>
+                    </a>
+
+                    <a href="/">
+                        <span>Visit Homepage</span>
+                        <small>View the public GigHives website</small>
+                    </a>
+
+                </div>
+            </section>
+
+            <footer class="admin-footer">
+                <p>© 2026 GigHives. Administration Panel.</p>
+            </footer>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

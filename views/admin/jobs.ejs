@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Jobs | GigHives</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="admin-page">
+
+<div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+
+        <h2 class="admin-logo">GigHives</h2>
+        <p class="admin-label">ADMIN PANEL</p>
+
+        <nav class="admin-navigation">
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/users">Manage Users</a>
+            <a href="/admin/jobs" class="active">Manage Jobs</a>
+            <a href="/admin/applications">Applications</a>
+            <a href="/">Visit Homepage</a>
+        </nav>
+
+        <form action="/logout" method="POST" class="admin-logout-form">
+            <button type="submit" class="admin-logout">Logout</button>
+        </form>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+
+        <header class="admin-header">
+            <div>
+                <h1>Job Management</h1>
+                <p>Welcome back, <strong><%= user.name %></strong>!</p>
+            </div>
+
+            <div class="admin-badge">Administrator</div>
+        </header>
+
+        <!-- Job Summary -->
+        <section class="admin-section">
+
+            <h2>Posted Jobs</h2>
+
+            <div class="admin-stats-grid">
+
+                <div class="admin-stat-card blue">
+                    <h3>Total Jobs</h3>
+                    <p><%= jobs.length %></p>
+                    <span>All posted jobs</span>
+                </div>
+
+                <div class="admin-stat-card green">
+                    <h3>Open Jobs</h3>
+                    <p><%= jobs.filter(j => j.status === "open").length %></p>
+                    <span>Currently available</span>
+                </div>
+
+                <div class="admin-stat-card red">
+                    <h3>Closed Jobs</h3>
+                    <p><%= jobs.filter(j => j.status === "closed").length %></p>
+                    <span>No longer available</span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Jobs Table -->
+        <section class="admin-section">
+
+            <h2>All Posted Jobs</h2>
+
+            <% if (jobs.length === 0) { %>
+
+                <div class="admin-empty">
+                    <p>No jobs have been posted yet.</p>
+                </div>
+
+            <% } else { %>
+
+                <div class="admin-table-container">
+
+                    <table class="admin-table">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Job Title</th>
+                                <th>Posted By</th>
+                                <th>Poster Email</th>
+                                <th>Category</th>
+                                <th>Budget</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                                <th>Posted Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <% jobs.forEach(function(job) { %>
+
+                                <tr>
+
+                                    <td><%= job.id %></td>
+
+                                    <td>
+                                        <strong><%= job.title %></strong>
+                                    </td>
+
+                                    <td><%= job.poster_name || "Unknown user" %></td>
+
+                                    <td><%= job.poster_email || "N/A" %></td>
+
+                                    <td><%= job.category %></td>
+
+                                    <td>Nu. <%= job.budget %></td>
+
+                                    <td>
+                                        <%= job.deadline
+                                            ? new Date(job.deadline).toLocaleDateString()
+                                            : "Not specified" %>
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge <%= job.status %>">
+                                            <%= job.status %>
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <%= new Date(job.created_at).toLocaleDateString() %>
+                                    </td>
+
+                                    <td class="job-action-cell">
+
+                                        <% if (job.status === "open") { %>
+
+                                            <form
+                                                action="/admin/jobs/<%= job.id %>/status"
+                                                method="POST"
+                                                onsubmit="return confirm('Are you sure you want to close this job?');"
+                                            >
+                                                <input
+                                                    type="hidden"
+                                                    name="status"
+                                                    value="closed"
+                                                >
+
+                                                <button type="submit" class="suspend-btn">
+                                                    Close Job
+                                                </button>
+                                            </form>
+
+                                        <% } else { %>
+
+                                            <form
+                                                action="/admin/jobs/<%= job.id %>/status"
+                                                method="POST"
+                                                onsubmit="return confirm('Are you sure you want to reopen this job?');"
+                                            >
+                                                <input
+                                                    type="hidden"
+                                                    name="status"
+                                                    value="open"
+                                                >
+
+                                                <button type="submit" class="reactivate-btn">
+                                                    Reopen Job
+                                                </button>
+                                            </form>
+
+                                            <form
+                                                action="/admin/jobs/<%= job.id %>/delete"
+                                                method="POST"
+                                                onsubmit="return confirm('Are you sure you want to permanently delete this job and all its applications? This action cannot be undone.');"
+                                            >
+                                                <button type="submit" class="suspend-btn">
+                                                    Delete Job
+                                                </button>
+                                            </form>
+
+                                        <% } %>
+
+                                    </td>
+
+                                </tr>
+
+                            <% }); %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            <% } %>
+
+        </section>
+
+        <footer class="admin-footer">
+            <p>© 2026 GigHives. Administration Panel.</p>
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

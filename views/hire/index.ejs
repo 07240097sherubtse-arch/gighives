@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hire Skills - GigHives</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="hire-page">
+
+    <header class="hire-header">
+        <a href="/" class="hire-logo">GigHives</a>
+
+        <nav class="hire-nav">
+            <a href="/">Home</a>
+            <a href="/jobs">Find Jobs</a>
+            <a href="/hire" class="active">Hire Skills</a>
+
+            <% if (user && user.role === "student") { %>
+                <a href="/student/dashboard">Dashboard</a>
+            <% } else if (user && user.role === "client") { %>
+                <a href="/client/dashboard">Dashboard</a>
+            <% } %>
+        </nav>
+    </header>
+
+    <main class="hire-container">
+
+        <!-- Page Introduction -->
+        <section class="hire-hero">
+            <span class="hire-label">DISCOVER TALENT</span>
+
+            <h1>Find Student Freelancers</h1>
+
+            <p class="hire-description">
+                Discover talented students, explore their skills,
+                and find the right person for your next project.
+            </p>
+        </section>
+
+        <!-- Freelancer Profiles -->
+        <% if (freelancers.length === 0) { %>
+
+            <div class="no-freelancers">
+                <div class="empty-icon">👥</div>
+                <h2>No Freelancer Profiles Yet</h2>
+                <p>
+                    Student freelancers will appear here after creating
+                    their profiles.
+                </p>
+            </div>
+
+        <% } else { %>
+
+            <div class="freelancer-results-heading">
+                <h2>Available Freelancers</h2>
+                <span><%= freelancers.length %> Profiles</span>
+            </div>
+
+            <div class="freelancer-grid">
+
+                <% freelancers.forEach(freelancer => { %>
+
+                    <article class="freelancer-card">
+
+                        <div class="freelancer-card-top">
+
+                            <div class="freelancer-avatar">
+                                <%= freelancer.full_name
+                                    ? freelancer.full_name.charAt(0).toUpperCase()
+                                    : "S" %>
+                            </div>
+
+                            <div class="freelancer-identity">
+                                <h2><%= freelancer.full_name %></h2>
+                                <span class="freelancer-role">
+                                    Student Freelancer
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="freelancer-card-content">
+
+                            <div class="freelancer-info-block">
+                                <h3>About Me</h3>
+                                <p class="freelancer-bio">
+                                    <%= freelancer.bio || "No biography provided yet." %>
+                                </p>
+                            </div>
+
+                            <div class="freelancer-info-block">
+                                <h3>Skills</h3>
+                                <p class="freelancer-detail">
+                                    <%= freelancer.skills || "Not specified" %>
+                                </p>
+                            </div>
+
+                            <div class="freelancer-info-block">
+                                <h3>Experience</h3>
+                                <p class="freelancer-detail">
+                                    <%= freelancer.experience || "Not specified" %>
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="freelancer-card-footer">
+
+                            <% if (freelancer.portfolio_url) { %>
+                                <a href="<%= freelancer.portfolio_url %>"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="portfolio-link">
+                                    View Portfolio ↗
+                                </a>
+                            <% } else { %>
+                                <span class="no-portfolio">
+                                    No portfolio available
+                                </span>
+                            <% } %>
+
+                            <% if (
+                                user &&
+                                (user.role === "client" || user.role === "student") &&
+                                Number(user.id) !== Number(freelancer.user_id)
+                            ) { %>
+
+                                <a href="/hire/request/<%= freelancer.user_id %>"
+                                   class="hire-freelancer-btn">
+                                    Hire This Freelancer
+                                </a>
+
+                            <% } %>
+
+                        </div>
+
+                    </article>
+
+                <% }); %>
+
+            </div>
+
+        <% } %>
+
+        <!-- Back Navigation -->
+        <div class="hire-bottom-navigation">
+
+            <% if (user && user.role === "student") { %>
+                <a href="/student/dashboard" class="hire-back-link">
+                    ← Back to Dashboard
+                </a>
+            <% } else if (user && user.role === "client") { %>
+                <a href="/client/dashboard" class="hire-back-link">
+                    ← Back to Dashboard
+                </a>
+            <% } else { %>
+                <a href="/" class="hire-back-link">
+                    ← Back to Home
+                </a>
+            <% } %>
+
+        </div>
+
+    </main>
+
+    <footer class="hire-footer">
+        <p>© 2026 GigHives. Connecting Skills with Opportunities.</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Sent Requests | GigHives</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="client-sent-requests-page">
+
+    <nav class="sent-requests-navbar">
+        <a href="/" class="sent-requests-logo">Gig<span>Hives</span></a>
+
+        <div class="sent-requests-nav-links">
+            <a href="/">Home</a>
+            <a href="/hire">Hire Skill</a>
+        </div>
+
+        <div class="sent-requests-user">
+            <%= user.full_name %>
+        </div>
+    </nav>
+
+    <main class="sent-requests-main">
+
+        <section class="sent-requests-heading">
+            <p class="sent-requests-eyebrow">CLIENT WORKSPACE</p>
+            <h1>My Sent Hiring Requests</h1>
+            <p>
+                Track the freelancers you have contacted and monitor
+                their responses to your project offers.
+            </p>
+        </section>
+
+        <%
+            const total = requests.length;
+            const pending = requests.filter(r => r.status === "pending").length;
+            const accepted = requests.filter(r => r.status === "accepted").length;
+            const rejected = requests.filter(r => r.status === "rejected").length;
+        %>
+
+        <section class="sent-request-stats">
+
+            <div class="sent-stat-card">
+                <div class="sent-stat-icon total">▤</div>
+                <div>
+                    <p>Total Requests</p>
+                    <h2><%= total %></h2>
+                </div>
+            </div>
+
+            <div class="sent-stat-card">
+                <div class="sent-stat-icon pending">◷</div>
+                <div>
+                    <p>Pending</p>
+                    <h2><%= pending %></h2>
+                </div>
+            </div>
+
+            <div class="sent-stat-card">
+                <div class="sent-stat-icon accepted">✓</div>
+                <div>
+                    <p>Accepted</p>
+                    <h2><%= accepted %></h2>
+                </div>
+            </div>
+
+            <div class="sent-stat-card">
+                <div class="sent-stat-icon rejected">×</div>
+                <div>
+                    <p>Rejected</p>
+                    <h2><%= rejected %></h2>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="sent-requests-content">
+
+            <div class="sent-requests-section-heading">
+                <div>
+                    <h2>Hiring Activity</h2>
+                    <p>All project offers you have sent to students.</p>
+                </div>
+                <span><%= total %> request(s)</span>
+            </div>
+
+            <% if (requests.length === 0) { %>
+
+                <div class="sent-requests-empty">
+                    <div class="sent-empty-icon">💼</div>
+                    <h2>No hiring requests sent yet</h2>
+                    <p>
+                        Find talented student freelancers and send
+                        them your first project offer.
+                    </p>
+                    <a href="/hire">Browse Freelancers</a>
+                </div>
+
+            <% } else { %>
+
+                <div class="sent-requests-list">
+
+                    <% requests.forEach(request => { %>
+
+                        <article class="sent-request-card">
+
+                            <div class="sent-request-card-header">
+
+                                <div class="sent-project-info">
+                                    <div class="sent-project-icon">GH</div>
+
+                                    <div>
+                                        <h3><%= request.project_title %></h3>
+                                        <p>
+                                            Freelancer:
+                                            <strong><%= request.student_name %></strong>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <span class="sent-request-status <%= request.status %>">
+                                    <%= request.status %>
+                                </span>
+
+                            </div>
+
+                            <div class="sent-request-description">
+                                <h4>Project Description</h4>
+                                <p><%= request.description %></p>
+                            </div>
+
+                            <div class="sent-request-details">
+
+                                <div>
+                                    <span>PROJECT BUDGET</span>
+                                    <strong>
+                                        Nu. <%= Number(request.budget).toLocaleString("en-IN") %>
+                                    </strong>
+                                </div>
+
+                                <div>
+                                    <span>DEADLINE</span>
+                                    <strong>
+                                        <%= request.deadline
+                                            ? new Date(request.deadline).toLocaleDateString()
+                                            : "Not specified" %>
+                                    </strong>
+                                </div>
+
+                                <div>
+                                    <span>SENT ON</span>
+                                    <strong>
+                                        <%= new Date(request.created_at).toLocaleDateString() %>
+                                    </strong>
+                                </div>
+
+                            </div>
+
+                            <div class="sent-request-footer">
+                                <% if (request.status === "pending") { %>
+                                    <p>
+                                        Waiting for the freelancer to respond.
+                                    </p>
+                                <% } else if (request.status === "accepted") { %>
+                                    <p class="sent-accepted-message">
+                                        ✓ The freelancer accepted your request!
+                                    </p>
+                                <% } else { %>
+                                    <p class="sent-rejected-message">
+                                        The freelancer declined this request.
+                                    </p>
+                                <% } %>
+                            </div>
+
+                        </article>
+
+                    <% }); %>
+
+                </div>
+
+            <% } %>
+
+        </section>
+
+        <a href="/hire" class="sent-requests-back-link">
+            ← Browse More Freelancers
+        </a>
+
+    </main>
+
+    <footer class="sent-requests-footer">
+        © 2026 GigHives. Connecting students with opportunities.
+    </footer>
+
+</body>
+</html>

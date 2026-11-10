@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - GigHives</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="student-dashboard">
+
+    <header class="dashboard-header">
+
+    <a href="/" class="dashboard-logo">GigHives</a>
+
+   <nav class="dashboard-nav">
+
+    <a href="/" class="home-link">Home</a>
+
+    <a href="/notifications" class="notification-link">
+        <span class="notification-icon">🔔</span>
+
+        <% if (unreadNotificationCount > 0) { %>
+            <span class="notification-badge">
+                <%= unreadNotificationCount %>
+            </span>
+        <% } %>
+    </a>
+
+    <a href="/logout" class="logout-btn">Logout</a>
+
+</nav>
+</header>
+
+    <main class="dashboard-container">
+
+        <section class="dashboard-welcome">
+            <p class="welcome-label">STUDENT DASHBOARD</p>
+            <h1>Welcome back, <%= user.full_name %>!</h1>
+            <p>Your next opportunity starts here. Find work, showcase your skills and grow your experience.</p>
+        </section>
+
+        <section class="dashboard-section">
+            <h2>What would you like to do?</h2>
+
+            <div class="dashboard-grid">
+
+                <a href="/jobs" class="dashboard-card">
+                    <div class="dashboard-icon">💼</div>
+                    <h3>Find Jobs</h3>
+                    <p>Explore available jobs and apply for opportunities.</p>
+                    <span>Explore jobs →</span>
+                </a>
+
+                <a href="/student/profile" class="dashboard-card">
+                    <div class="dashboard-icon">👤</div>
+                    <h3>My Freelancer Profile</h3>
+                    <p>Showcase your skills, experience and portfolio.</p>
+                    <span>Manage profile →</span>
+                </a>
+
+                <a href="/my-submissions" class="dashboard-card">
+                    <div class="dashboard-icon">📋</div>
+                    <h3>My Applications</h3>
+                    <p>Track the jobs you have applied for and check their status.</p>
+                    <span>View applications →</span>
+                </a>
+
+                <a href="/hire" class="dashboard-card">
+                    <div class="dashboard-icon">🤝</div>
+                    <h3>Hire Skill</h3>
+                    <p>Discover other student freelancers and their skills.</p>
+                    <span>Find freelancers →</span>
+                </a>
+                
+<!-- My Hiring Requests Card -->
+<div class="dashboard-card hiring-requests-dashboard-card">
+
+    <div class="dashboard-card-icon hiring-icon">
+        💼
+    </div>
+
+    <h2>My Hiring Requests</h2>
+
+    <p>
+        View project offers from clients, review their budgets
+        and deadlines, and accept or reject hiring requests.
+    </p>
+
+    <a href="/hire/my-requests" class="dashboard-card-link">
+        View Hiring Requests →
+    </a>
+
+</div>
+
+    My Hiring Requests
+</a>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="dashboard-footer">
+        <p>© 2026 GigHives. Connecting student talent with opportunities.</p>
+    </footer>
+
+</body>
+</html>

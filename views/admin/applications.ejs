@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GigHives - Application Management</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="admin-page">
+
+<div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <h2 class="admin-logo">GigHives</h2>
+        <p class="admin-sidebar-label">ADMIN PANEL</p>
+
+        <nav class="admin-navigation">
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/users">Manage Users</a>
+            <a href="/admin/jobs">Manage Jobs</a>
+            <a href="/admin/applications" class="active">Applications</a>
+            <a href="/">Visit Website</a>
+        </nav>
+
+        <div class="admin-sidebar-bottom">
+            <form action="/logout" method="POST">
+                <button type="submit" class="admin-logout-btn">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+
+        <header class="admin-header">
+            <div>
+                <h1>Application Management</h1>
+                <p>Welcome, <strong>GigHives Admin!</strong></p>
+            </div>
+            <span class="admin-role-badge">Administrator</span>
+        </header>
+
+        <!-- Page Heading -->
+        <section class="admin-content-section">
+            <div class="admin-section-heading">
+                <div>
+                    <h2>All Student Applications</h2>
+                    <p>Monitor applications submitted by students across GigHives.</p>
+                </div>
+            </div>
+
+            <!-- Application Statistics -->
+            <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon">📄</div>
+                    <div>
+                        <p>Total Applications</p>
+                        <h2><%= applications.length %></h2>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon">⏳</div>
+                    <div>
+                        <p>Pending Applications</p>
+                        <h2><%= applications.filter(app => app.status === "pending").length %></h2>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon">✓</div>
+                    <div>
+                        <p>Accepted Applications</p>
+                        <h2><%= applications.filter(app => app.status === "accepted").length %></h2>
+                    </div>
+                </div>
+
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon">✕</div>
+                    <div>
+                        <p>Rejected Applications</p>
+                        <h2><%= applications.filter(app => app.status === "rejected").length %></h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Applications Table -->
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Student</th>
+                            <th>Email</th>
+                            <th>Job Title</th>
+                            <th>Cover Letter</th>
+                            <th>Status</th>
+                            <th>Applied Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <% if (applications.length > 0) { %>
+
+                            <% applications.forEach(app => { %>
+                                <tr>
+                                    <td>#<%= app.id %></td>
+
+                                    <td>
+                                        <strong><%= app.student_name %></strong>
+                                    </td>
+
+                                    <td><%= app.student_email %></td>
+
+                                    <td><%= app.job_title %></td>
+
+                                    <td class="application-cover-letter">
+                                        <%= app.cover_letter %>
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge <%= app.status %>">
+                                            <%= app.status %>
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <%= new Date(app.created_at).toLocaleDateString() %>
+                                    </td>
+                                </tr>
+                            <% }); %>
+
+                        <% } else { %>
+                            <tr>
+                                <td colspan="7" class="admin-empty">
+                                    No applications have been submitted yet.
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+        <footer class="admin-footer">
+            <p>© 2026 GigHives. Admin Panel.</p>
+        </footer>
+
+    </main>
+</div>
+
+</body>
+</html>

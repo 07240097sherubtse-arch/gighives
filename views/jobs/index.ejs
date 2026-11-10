@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Jobs | GigHives</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="find-jobs-page">
+
+    <!-- Navigation Bar -->
+    <nav class="jobs-navbar">
+        <a href="/" class="jobs-logo">GigHives<span>.</span></a>
+
+        <div class="jobs-nav-links">
+            <a href="/">Home</a>
+            <a href="/jobs" class="active">Find Jobs</a>
+            <a href="/hire/skill">Hire Skill</a>
+
+            <% if (user) { %>
+                <% if (user.role === "student") { %>
+                    <a href="/student/dashboard">Dashboard</a>
+                <% } else { %>
+                    <a href="/client/dashboard">Dashboard</a>
+                <% } %>
+            <% } %>
+        </div>
+
+        <div class="jobs-nav-account">
+            <% if (user) { %>
+                <span>Hi, <%= user.full_name %></span>
+            <% } else { %>
+                <a href="/login">Login</a>
+                <a href="/register" class="jobs-register-btn">Join Now</a>
+            <% } %>
+        </div>
+    </nav>
+
+
+    <!-- Main Content -->
+    <main class="jobs-main">
+
+        <!-- Page Heading -->
+        <section class="jobs-hero">
+            <span class="jobs-tag">OPPORTUNITIES AWAIT</span>
+
+            <h1>Find Your Next <span>Opportunity.</span></h1>
+
+            <p>
+                Discover exciting projects, showcase your skills,
+                and turn your talent into opportunities.
+            </p>
+        </section>
+
+
+        <!-- Success Message -->
+        <% if (applicationSuccess) { %>
+            <div class="jobs-success-message">
+                Your application has been submitted successfully!
+            </div>
+        <% } %>
+
+
+        <!-- Jobs Section -->
+        <section class="jobs-list-section">
+
+            <div class="jobs-section-heading">
+                <div>
+                    <h2>Available Jobs</h2>
+                    <p>Explore opportunities posted by clients.</p>
+                </div>
+
+                <span class="jobs-count">
+                    <%= jobs.length %> Jobs Available
+                </span>
+            </div>
+
+
+            <% if (jobs.length === 0) { %>
+
+                <div class="jobs-empty-state">
+                    <h3>No jobs available right now</h3>
+                    <p>Please check back later for new opportunities.</p>
+                </div>
+
+            <% } else { %>
+
+                <div class="jobs-grid">
+
+                    <% jobs.forEach(job => { %>
+
+                        <article class="modern-job-card">
+
+                            <div class="job-card-top">
+                                <span class="job-category">
+                                    <%= job.category %>
+                                </span>
+
+                                <span class="job-budget">
+                                    Nu. <%= job.budget %>
+                                </span>
+                            </div>
+
+                            <h3><%= job.title %></h3>
+
+                            <p class="job-description">
+                                <%= job.description %>
+                            </p>
+
+                            <div class="job-information">
+                                <div>
+                                    <span>Deadline</span>
+                                    <strong>
+                                        <%= job.deadline || "Not specified" %>
+                                    </strong>
+                                </div>
+                            </div>
+
+                            <% if (user && user.role === "student" && user.id != job.client_id) { %>
+
+                                <form
+                                    action="/jobs/<%= job.id %>/apply"
+                                    method="POST"
+                                    class="job-application-form"
+                                >
+
+                                    <label for="coverLetter-<%= job.id %>">
+                                        Why are you suitable for this job?
+                                    </label>
+
+                                    <textarea
+                                        id="coverLetter-<%= job.id %>"
+                                        name="coverLetter"
+                                        placeholder="Tell the client about your skills and experience..."
+                                        required
+                                    ></textarea>
+
+                                    <button type="submit" class="job-apply-btn">
+                                        Apply Now →
+                                    </button>
+
+                                </form>
+
+                            <% } else if (!user) { %>
+
+                                <a href="/login" class="job-login-btn">
+                                    Login to Apply →
+                                </a>
+
+                            <% } %>
+
+                        </article>
+
+                    <% }) %>
+
+                </div>
+
+            <% } %>
+
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="jobs-footer">
+        <p>© 2026 GigHives. Connecting talent with opportunities.</p>
+    </footer>
+
+</body>
+</html>

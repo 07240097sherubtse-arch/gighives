@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications | GigHives</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body class="my-submissions-page">
+
+    <nav class="submissions-navbar">
+        <a href="/" class="submissions-logo">GigHives</a>
+
+        <div class="submissions-nav-links">
+            <a href="/">Home</a>
+            <a href="/jobs">Find Jobs</a>
+            <a href="/hire/skill">Hire Skill</a>
+            <a href="/my-submissions" class="active">My Applications</a>
+        </div>
+    </nav>
+
+    <main class="submissions-main">
+
+        <section class="submissions-hero">
+            <h1>My Applications</h1>
+            <p>
+                Track the jobs you have applied for and stay updated
+                on your application progress.
+            </p>
+        </section>
+
+        <section class="submissions-section">
+
+            <div class="submissions-heading">
+                <div>
+                    <h2>Your Applications</h2>
+                    <p>Review your submitted job applications.</p>
+                </div>
+
+                <span><%= applications.length %> application(s)</span>
+            </div>
+
+            <% if (applications.length === 0) { %>
+
+                <div class="submissions-empty">
+                    <h3>No applications yet</h3>
+                    <p>
+                        You haven't applied for any jobs.
+                        Explore available opportunities and submit your first application.
+                    </p>
+                    <a href="/jobs">Explore Jobs</a>
+                </div>
+
+            <% } else { %>
+
+                <div class="submissions-grid">
+
+                    <% applications.forEach(application => { %>
+
+                        <article class="submission-card">
+
+                            <div class="submission-card-header">
+                                <div>
+                                    <h3><%= application.job_title %></h3>
+                                    <p>
+                                        Posted by
+                                        <strong><%= application.job_owner %></strong>
+                                    </p>
+                                </div>
+
+                                <span class="submission-status <%= application.status %>">
+                                    <%= application.status %>
+                                </span>
+                            </div>
+
+                            <div class="submission-details">
+
+                                <div>
+                                    <span>Budget</span>
+                                    <strong>Nu. <%= application.budget %></strong>
+                                </div>
+
+                                <div>
+                                    <span>Applied On</span>
+                                    <strong>
+                                        <%= new Date(application.applied_at).toLocaleDateString() %>
+                                    </strong>
+                                </div>
+
+                            </div>
+
+                            <div class="submission-cover-letter">
+                                <strong>Your Cover Letter</strong>
+                                <p>
+                                    <%= application.cover_letter || "No cover letter provided." %>
+                                </p>
+                            </div>
+
+                            <% if (application.status === "accepted") { %>
+
+                                <div class="submission-feedback accepted-message">
+                                    <strong>Congratulations!</strong>
+                                    <p>
+                                        Your application has been accepted.
+                                        The client has selected you for this job.
+                                    </p>
+                                </div>
+
+                            <% } else if (application.status === "rejected") { %>
+
+                                <div class="submission-feedback rejected-message">
+                                    <strong>Application Not Selected</strong>
+                                    <p>
+                                        Unfortunately, your application was not selected.
+                                        Keep exploring other opportunities on GigHives.
+                                    </p>
+                                </div>
+
+                            <% } else { %>
+
+                                <div class="submission-feedback pending-message">
+                                    <strong>Application Under Review</strong>
+                                    <p>
+                                        Your application is waiting for the client's decision.
+                                    </p>
+                                </div>
+
+                            <% } %>
+
+                        </article>
+
+                    <% }) %>
+
+                </div>
+
+            <% } %>
+
+        </section>
+
+    </main>
+
+    <footer class="submissions-footer">
+        <p>© 2026 GigHives. Connecting students with opportunities.</p>
+    </footer>
+
+</body>
+</html>
